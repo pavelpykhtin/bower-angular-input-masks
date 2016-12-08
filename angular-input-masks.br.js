@@ -455,6 +455,8 @@ function DateMaskDirective($locale) {
 		restrict: 'A',
 		require: 'ngModel',
 		link: function (scope, element, attrs, ctrl) {
+			attrs.parse = attrs.parse || 'true';
+
 			dateFormat = attrs.uiDateMask || dateFormat;
 
 			var dateMask = new StringMask(dateFormat.replace(/[YMD]/g,'0'));
@@ -489,7 +491,9 @@ function DateMaskDirective($locale) {
 					ctrl.$render();
 				}
 
-				return moment(formatedValue, dateFormat).toDate();
+				return attrs.parse === 'false'
+					? formatedValue
+					: moment(formatedValue, dateFormat).toDate();
 			});
 
 			ctrl.$validators.date =	function validator(modelValue, viewValue) {
